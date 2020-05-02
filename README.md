@@ -29,7 +29,7 @@ This library is still a work.in.progress, not yet fully functional.
   - [ ] get
   - [ ] join
   - [ ] leave
-  - [ ] list
+  - [x] list
 
 ## Test Coverage
 
