@@ -219,6 +219,22 @@ class Media:
         self.INCLUDE_ARCHIVED = val
 
     # API ENDPOINTS
+    def get(self, id: str):
+        """
+        Returns the media info corresponding to the specified id
+
+        Parameters
+        ----------
+        id: str
+            Id of the media to get
+
+        Returns
+        -------
+        json object:
+            Media inforamtion
+        """
+        return self._service.mediaItems().get(mediaItemId=id).execute()
+
     def list(self):
         """
         Iterator over the meda present in the Google Photos account

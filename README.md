@@ -22,7 +22,7 @@ This library is still a work.in.progress, not yet fully functional.
 - [ ] MediaItems
   - [ ] batchCreate
   - [ ] batchGet
-  - [ ] get
+  - [x] get
   - [x] list
   - [x] search
 - [ ] SharedAlbums
