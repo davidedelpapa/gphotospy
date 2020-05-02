@@ -399,10 +399,33 @@ class Media:
             for media in curr_list:
                 yield media
 
-    def search_album(self, album_id):
+    def search_album(self, album_id: str):
         """
         Specialized search in album, no other filter can apply.
 
         You can consider using instead Album.list() for similar purposes
+
+        Parameters
+        ----------
+        album_id: str
+            Id of the album containing the media sought
+
+        Returns
+        -------
+        iterator:
+            iteratore over the list of media present in the album
         """
-        pass
+        page_token = ""
+        request_body = {
+            "albumId": album_id,
+            "pageSize": self.SEARCH_PAGESIZE,
+            "pageToken": page_token
+        }
+
+        while page_token is not None:
+            result = self._service.mediaItems().search(
+                body=request_body).execute()
+            page_token = result.get("nextPageToken", None)
+            curr_list = result.get("mediaItems")
+            for media in curr_list:
+                yield media
