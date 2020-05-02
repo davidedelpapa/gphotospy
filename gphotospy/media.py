@@ -7,6 +7,59 @@ class Val:
         return t == self.type
 
 
+def date(year=0, month=0, day=0):
+    """
+    Return a Date object.
+
+    Parameters
+    ----------
+    year: int
+        Year component of the date. Set to 0 if searching for recurrences,
+        when day and month is fixed, such as birthdays, ...
+        Must be from 1 to 9999, or 0 if specifying a date without a year.
+    month: int
+        Month component of the date. Set to 0 month and day
+        if only the year is significant.
+        Must be from 1 to 12, or 0 if specifying a date without a month.
+    day: int
+        Day component of the date. Set to 0 if only month and year are
+        to be sought, or set to 0 day and month if searching
+        only for years.
+        Must be from 1 to 31, and valid for the month, or 0 if specifying
+        a date without a day.
+
+    Returns
+    -------
+    Date object
+    """
+    return Val({
+        "year": year,
+        "month": month,
+        "day": day
+    }, "DATE")
+
+
+def date_range(start_date, end_date):
+    """
+    Return a dateRange object.
+
+    Parameters
+    ----------
+    start_date: Date object
+        Starting date of the range. Use date() function to set it
+    end_date: Date object
+        Ending date of the range. Use date() function to set it
+
+    Returns
+    -------
+    dateRange object
+    """
+    return Val({
+        "startDate": start_date.val,
+        "endDate": end_date.val
+    }, "DATERANGE")
+
+
 class CONTENTFILTER:
     """
     Filters to search media by categories
@@ -252,13 +305,16 @@ class Media:
             "includeArchivedMedia": self.INCLUDE_ARCHIVED,
             "excludeNonAppCreatedData": self.SHOW_ONLY_CREATED
         }
-        filter_content = {}
+
         filter_date = {}
+        filter_daterange = {}
+        filter_content = {}
         filter_mediatype = {}
         filter_feature = {}
 
         # lists
         date_filters = []
+        daterange_filters = []
         content_filters = []
         mediatype_filters = []
         feature_filters = []
@@ -267,6 +323,10 @@ class Media:
 
         # Add filters
         for f in filter:
+            if f.isinstance('DATE'):
+                date_filters.append(f.val)
+            if f.isinstance('DATERANGE'):
+                daterange_filters.append(f.val)
             if f.isinstance('CONTENTFILTER'):
                 content_filters.append(f.val)
             if f.isinstance('MEDIAFILTER'):
@@ -280,11 +340,11 @@ class Media:
                     content_excludes.append(e.val)
 
         # Add dicts
-        '''
-        # TODO: dates filters
-        if len(date_filters) > 0
-            filter_date["includedContentCategories"] = date_filters
-        '''
+
+        if len(date_filters) > 0:
+            filter_date["dates"] = date_filters
+        if len(daterange_filters) > 0:
+            filter_date["ranges"] = daterange_filters
         if len(content_filters) > 0:
             filter_content["includedContentCategories"] = content_filters
         if len(content_excludes) > 0:
@@ -297,6 +357,8 @@ class Media:
             filter_feature["includedFeatures"] = feature_filters
 
         # Construct filter
+        if len(filter_date) > 0:
+            search_filter["dateFilter"] = filter_date
         if len(filter_content) > 0:
             search_filter["contentFilter"] = filter_content
         if len(mediatype_filters) > 0:

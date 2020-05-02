@@ -23,9 +23,8 @@ This library is still a work.in.progress, not yet fully functional.
   - [ ] batchCreate
   - [ ] batchGet
   - [ ] get
-  - [ ] get
   - [x] list
-  - [ ] search
+  - [x] search
 - [ ] SharedAlbums
   - [ ] get
   - [ ] join
