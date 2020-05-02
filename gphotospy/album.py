@@ -269,7 +269,7 @@ class Album:
         Returns
         -------
         json object:
-            Album inforamtion
+            Album information
         """
         return self._service.albums().get(albumId=id).execute()
 
