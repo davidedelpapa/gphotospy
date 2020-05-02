@@ -44,7 +44,7 @@ def set_position(position=POSITION.FIRST, id_item=None):
     return pos
 
 
-def geolocation(name: str, lat: float, lon: float):
+def geolocate(name: str, lat: float, lon: float):
     """
     Returns a quasi-codified geopositioned element.
 
@@ -163,7 +163,7 @@ class Album:
         album_id: str
             Id of the album to add text to
         location: Location object
-            Location object, as returned from geolocation() function
+            Location object, as returned from geolocate() function
         position: Position object
             Position object where to add the location.
             Contruct it with the set_position() function
@@ -192,9 +192,9 @@ class Album:
         album_id: str
             Id of the album to add text to
         origin_loc: Location object
-            Location of MAP origin, as returned from geolocation() function
+            Location of MAP origin, as returned from geolocate() function
         destination_loc: Location object
-            Location of MAP origin, as returned from geolocation() function
+            Location of MAP origin, as returned from geolocate() function
         position: Position object
             Position object where to add the location.
             Contruct it with the set_position() function
