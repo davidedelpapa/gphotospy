@@ -351,9 +351,10 @@ class Album:
                 "isCommentable": commentable
             }
         }
-        return self._service.albums().share(
+        result = self._service.albums().share(
             albumId=id,
             body=request_body).execute()
+        return result.get('shareInfo')
 
     def unshare(self, id: str):
         """
