@@ -38,8 +38,21 @@ class SharedAlbum:
         self.SHOW_ONLY_CREATED = val
 
     # API ENDPOINTS
-    def get(self):
-        pass
+    def get(self, token: str):
+        """
+        Returns the album info corresponding to the specified Share token
+
+        Parameters
+        ----------
+        token: str
+            Share token of the shared album to get
+
+        Returns
+        -------
+        json object:
+            Album information
+        """
+        return self._service.sharedAlbums().get(shareToken=token).execute()
 
     def join(self):
         pass

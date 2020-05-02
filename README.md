@@ -26,7 +26,7 @@ This library is still a work.in.progress, not yet fully functional.
   - [x] list
   - [x] search
 - [ ] SharedAlbums
-  - [ ] get
+  - [x] get
   - [ ] join
   - [ ] leave
   - [x] list
