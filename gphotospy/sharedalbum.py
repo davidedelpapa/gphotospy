@@ -54,11 +54,38 @@ class SharedAlbum:
         """
         return self._service.sharedAlbums().get(shareToken=token).execute()
 
-    def join(self):
-        pass
+    def join(self, token: str):
+        """
+        Joins the album specified by the Share token on behalf of the user
 
-    def leave(self):
-        pass
+        Parameters
+        ----------
+        token: str
+            Share token of the shared album to join
+
+        Returns
+        -------
+        json object:
+            Joined album information
+        """
+        request_body = {
+            "shareToken": token
+        }
+        return self._service.sharedAlbums().join(body=request_body).execute()
+
+    def leave(self, token: str):
+        """
+        Leaves the album specified by the Share token on behalf of the user
+
+        Parameters
+        ----------
+        token: str
+            Share token of the joined shared album to leave
+        """
+        request_body = {
+            "shareToken": token
+        }
+        return self._service.sharedAlbums().leave(body=request_body).execute()
 
     def list(self, show_only_created=SHOW_ONLY_CREATED):
         """

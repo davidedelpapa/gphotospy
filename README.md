@@ -25,10 +25,10 @@ This library is still a work.in.progress, not yet fully functional.
   - [x] get
   - [x] list
   - [x] search
-- [ ] SharedAlbums
+- [x] SharedAlbums
   - [x] get
-  - [ ] join
-  - [ ] leave
+  - [x] join
+  - [x] leave
   - [x] list
 
 ## Test Coverage
