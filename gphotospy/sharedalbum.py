@@ -12,7 +12,7 @@ class SharedAlbum:
         service: service
             Service created with authorize.init()
         """
-        self._service = service
+        self._service = service["service"]
 
     # UTILITIES
     def set_pagination(self, n: int):

@@ -1,3 +1,8 @@
+import os
+from .album import set_position, POSITION
+from .upload import upload
+
+
 class Val:
     def __init__(self, v, t: str):
         self.val = v
@@ -171,7 +176,9 @@ class Media:
         service: service
             Service created with authorize.init()
         """
-        self._service = service
+        self._service = service["service"]
+        self._secrets = service["secrets"]
+        self._staged_media = []
 
     # UTILITIES
     def set_list_pagination(self, n: int):
@@ -218,7 +225,124 @@ class Media:
         """
         self.INCLUDE_ARCHIVED = val
 
+    def get_upload_object(self, upload_token, file_name="", description=""):
+        """
+        Manually constructs an upload object.
+
+        It is recommended to follow the stage procedure instead of the raw
+        uploading method.
+
+        Parameters
+        ----------
+        upload_token: upload token
+            Upload token as returned from the upload.upload() function
+        file_name: str, optional
+            File name to register in the server, in the form of name.extension
+        description: str, optional
+            Description to display in the media info panel
+
+        Returns
+        -------
+        Upload object
+        """
+        return {
+            "description": description,
+            "simpleMediaItem": {
+                "uploadToken": upload_token,
+                "fileName": file_name
+            }
+        }
+
+    def stage_media(self, media_file, description=""):
+        """
+        Stage media to be added to the photo account,
+        by uploading to Google server.
+
+        To complete the operation all the staged media should be uploaded
+        through the batchCreate() method (see).
+
+        Parameters
+        ----------
+        media_file: Path
+            Path of the media file to be uploaded
+        description: str, optional
+            Description to display in the media info panel
+
+        Returns
+        -------
+        New media object if successfull, None if unsuccessfull.
+        """
+        upload_token = upload(self._secrets, media_file)
+        if upload_token is None:
+            return None
+        new_media = self.get_upload_object(
+            upload_token,
+            os.path.basename(media_file),
+            description)
+
+        self._staged_media.append(new_media)
+        return new_media
+
     # API ENDPOINTS
+
+    def batchCreate(self,
+                    album_id=None,
+                    album_position=None,
+                    media_items=None):
+        """
+        Create medias in the Photos account
+
+        The media must be previously uploaded. It is recommended to stage them
+        using the stage_media() method, and once a batch has been uploaded
+        use this method to complete the transition.
+
+        Parameters
+        ----------
+        media_items: list, optional
+            List of upload objects, uploaded to the server.
+            If you are using stage_media() ignore this parameter.
+            if not staging, use upload.upload() to upload the file and get
+            the token, and media.get_upload_object() to get the upload object,
+            and create a list with these object to pass to this parameter.
+        album_id: str
+            Id of the album to attach the media to. It is optional, if not
+            specified, it will create an album with the current date, and
+            add all media to that album
+        album_position: POSITION, optional
+            Position in the album where to put the media.
+            See the relative class in album.POSITION
+        """
+        if album_position is None:
+            album_position = set_position()
+        if media_items is None:
+            if len(self._staged_media) > 0:
+                media_items = self._staged_media
+            else:
+                return None
+        if album_id is None:
+            from .album import Album
+            from datetime import datetime
+            curr_datetime = datetime.now()
+            date_str = curr_datetime.strftime("%c")
+            service_object = {
+                "secrets": self._secrets,
+                "service": self._service
+            }
+            _album = Album(service_object)
+            _resp = _album.create(date_str)
+            album_id = _resp.get("id")
+        request_body = {
+            "album_id": album_id,
+            "newMediaItems": media_items,
+            "albumPosition": album_position
+        }
+        if album_id is None:
+            request_body["albumId"] = album_id
+        result = self._service.mediaItems().batchCreate(
+            body=request_body).execute()
+        self._staged_media.clear()
+        return result.get("newMediaItemResults")
+
     def get(self, id: str):
         """
         Returns the media info corresponding to the specified id

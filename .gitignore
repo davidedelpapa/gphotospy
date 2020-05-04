@@ -3,6 +3,7 @@ gphoto_oauth.json
 *.token
 app.py
 run
+img/
 
 # vscode
 .vscode/

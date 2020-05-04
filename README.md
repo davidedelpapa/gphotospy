@@ -6,9 +6,17 @@ Interact with Gooogle Photos in Python
 
 This library is still a work.in.progress, not yet fully functional.
 
+However experimental, most of the API is covered, and it could be used for personal expriments at least.
+
+There will soon be examples of usage.
+
 ## API Coverage
 
 - [x] OAuth authorization
+- [ ] Google server upload
+
+  - [x] Simple uploader
+  - [ ] Resumable uploader
 
 - [ ] Albums
   - [x] addEnrichment
@@ -20,7 +28,7 @@ This library is still a work.in.progress, not yet fully functional.
   - [x] share
   - [x] unshare
 - [ ] MediaItems
-  - [ ] batchCreate
+  - [x] batchCreate
   - [ ] batchGet
   - [x] get
   - [x] list
@@ -33,7 +41,7 @@ This library is still a work.in.progress, not yet fully functional.
 
 ## Test Coverage
 
-Not yet implemented
+Not yet implemented. Error handling is also almost non existent.
 
 ## Set up authorization
 

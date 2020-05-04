@@ -9,24 +9,15 @@ from google.auth.transport.requests import Request
 
 service_name = "photoslibrary"
 version = "v1"
+token_file = f'{service_name}_{version}.token'
 scopes_arr = [
     'https://www.googleapis.com/auth/photoslibrary',
     'https://www.googleapis.com/auth/photoslibrary.sharing'
 ]
 
 
-def init(secrets):
-    """
-    Initializes the service, requesting the authorization from the browser.
-
-    Parameters
-    ----------
-    secrets: str
-        JSON file containing the secrets for OAuth,
-        as created in the Google Cloud Consolle
-    """
+def get_credentials(secrets):
     credentials = None
-    token_file = f'{service_name}_{version}.token'
 
     if os.path.exists(token_file):
         with open(token_file, 'rb') as token:
@@ -42,11 +33,28 @@ def init(secrets):
 
         with open(token_file, 'wb') as token:
             pickle.dump(credentials, token)
+    return credentials
 
+
+def init(secrets):
+    """
+    Initializes the service, requesting the authorization from the browser.
+
+    Parameters
+    ----------
+    secrets: str
+        JSON file containing the secrets for OAuth,
+        as created in the Google Cloud Consolle
+    """
+    credentials = get_credentials(secrets)
+    service_object = {
+        "secrets": secrets
+    }
     try:
         service = build(service_name, version, credentials=credentials)
         logging.info(service_name, 'service created successfully')
-        return service
+        service_object["service"] = service
+        return service_object
     except Exception as e:
         logging.error(e)
     return None

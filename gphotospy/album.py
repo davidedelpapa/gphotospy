@@ -91,7 +91,8 @@ class Album:
         service: service
             Service created with authorize.init()
         """
-        self._service = service
+        self._service = service["service"]
+        self._secrets = service["secrets"]
 
     # UTILITIES
     def set_pagination(self, n: int):
