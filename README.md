@@ -18,10 +18,15 @@ There will soon be examples of usage.
   - [x] Simple uploader
   - [ ] Resumable uploader
 
+- [ ] Objects representations
+
+  - [ ] Media
+  - [ ] Album
+
 - [ ] Albums
   - [x] addEnrichment
-  - [ ] batchAddMediaItems
-  - [ ] batchRemoveMediaItems
+  - [x] batchAddMediaItems
+  - [x] batchRemoveMediaItems
   - [x] create
   - [x] get
   - [x] list

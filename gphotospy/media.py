@@ -527,8 +527,6 @@ class Media:
         """
         Specialized search in album, no other filter can apply.
 
-        You can consider using instead Album.list() for similar purposes
-
         Parameters
         ----------
         album_id: str

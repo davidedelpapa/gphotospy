@@ -239,6 +239,56 @@ class Album:
         result = self.add_enrichment(album_id, enrichement_type, position)
         return result.get("enrichmentItem")
 
+    def batchAddMediaItems(self, album_id: str, items):
+        """
+        Add a list of media items to the given album
+
+        The media items and the album must have been created
+        by the developer via the API.
+
+        Parameters
+        ----------
+        album_id: str
+            Id of the album to add the items to
+        items: [str]
+            list of Ids of items to add to the album
+
+        Returns
+        -------
+        Empty object if successfull
+        """
+        request_body = {
+            "mediaItemIds": items
+        }
+        return self._service.albums().batchAddMediaItems(
+            albumId=album_id,
+            body=request_body).execute()
+
+    def batchRemoveMediaItems(self, album_id: str, items):
+        """
+        Removes a list of media items to the given album
+
+        The media items and the album must have been created
+        by the developer via the API.
+
+        Parameters
+        ----------
+        album_id: str
+            Id of the album to add the items to
+        items: [str]
+            list of Ids of items to add to the album
+
+        Returns
+        -------
+        Empty object if successfull
+        """
+        request_body = {
+            "mediaItemIds": items
+        }
+        return self._service.albums().batchRemoveMediaItems(
+            albumId=album_id,
+            body=request_body).execute()
+
     def create(self, title: str):
         """
         Creates an empty album with the given title
