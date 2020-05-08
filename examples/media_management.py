@@ -3,6 +3,7 @@ from gphotospy.media import Media
 from gphotospy.media import CONTENTFILTER, MEDIAFILTER, FEATUREFILTER
 from gphotospy.media import date, date_range
 from gphotospy.album import Album
+from googleapiclient.errors import HttpError
 
 # Select secrets file
 CLIENT_SECRET_FILE = "gphoto_oauth.json"
@@ -25,7 +26,7 @@ for _ in range(3):
     try:
         # Print only media's filename (if present, otherwise None)
         print(next(media_iterator).get("filename"))
-    except StopIteration:
+    except (StopIteration, TypeError) as e:
         # Handle exception if there are no media left
         print("No (more) media.")
         break
@@ -42,11 +43,11 @@ print(media_manager.get(media_id).get('mimeType'))
 
 # Search by content
 print("Searching 3 travel-related media")
-search_iterator = my_media.search(filter=[CONTENTFILTER.TRAVEL])
+search_iterator = media_manager.search(filter=[CONTENTFILTER.TRAVEL])
 try:
     for _ in range(3):
         print(next(search_iterator).get("filename"))
-except e:
+except (StopIteration, TypeError) as e:
     print("No (more) travel-related media.")
 
 # Search by media type
@@ -55,7 +56,7 @@ search_iterator = media_manager.search(filter=[MEDIAFILTER.VIDEO])
 try:
     for _ in range(3):
         print(next(search_iterator).get("filename"))
-except e:
+except (StopIteration, TypeError) as e:
     print("No (more) video.")
 
 # Search by featured
@@ -63,7 +64,7 @@ print("Searching for at least a featured media")
 search_iterator = media_manager.search(filter=[FEATUREFILTER.FAVORITES])
 try:
     print(next(search_iterator).get("filename"))
-except e:
+except (StopIteration, TypeError) as e:
     print("No featured media.")
 
 # Search by exact date
@@ -73,7 +74,7 @@ search_iterator = media_manager.search(filter=[Xmas])
 try:
     for _ in range(3):
         print(next(search_iterator).get("filename"))
-except e:
+except (StopIteration, TypeError) as e:
     print("No (more) Xmas' media.")
 
 # Search by range of dates
@@ -87,7 +88,7 @@ search_iterator = media_manager.search(filter=[my_range])
 try:
     for _ in range(3):
         print(next(search_iterator).get("filename"))
-except e:
+except (StopIteration, TypeError) as e:
     print("No (more) media in the range.")
 
 # Combining search filters
@@ -95,20 +96,20 @@ except e:
 
 print("Let's do a detailed search")
 
-search_iterator = my_media.search(filter=[
+search_iterator = media_manager.search(filter=[
     FEATUREFILTER.NONE,  # This is default, didn't need be specified
     CONTENTFILTER.TRAVEL,
     CONTENTFILTER.SELFIES,
     MEDIAFILTER.ALL_MEDIA,  # This too is default...
-    media.date(2020, 4, 24),
-    media.date_range(
-        start_date=media.date(2020, 4, 19),
-        end_date=media.date(2020, 4, 21)
+    date(2020, 4, 24),
+    date_range(
+        start_date=date(2020, 4, 19),
+        end_date=date(2020, 4, 21)
     )
 ])
 try:
     print(next(search_iterator))
-except e:
+except (StopIteration, TypeError) as e:
     print("No media found :-(")
 
 # Search for media in album
@@ -125,5 +126,5 @@ search_iterator = media_manager.search_album(album_id)
 try:
     for _ in range(3):
         print(next(search_iterator).get("filename"))
-except e:
+except (StopIteration, TypeError) as e:
     print("No (more) media in album {}.".format(album_title))
