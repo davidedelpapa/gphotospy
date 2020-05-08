@@ -13,6 +13,23 @@ class SharedAlbum:
         ----------
         service: service
             Service created with authorize.init()
+
+        Examples
+        --------
+        Example init of the media manager:
+
+        Imports
+        >>> from gphotospy import authorize
+        >>> from gphotospy.sharedalbum import SharedAlbum
+
+         Select Secrets file
+        >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+        Get authorization and return a service object
+        >>> service = authorize.init(CLIENT_SECRET_FILE)
+
+        Init the media manager
+        >>> sharing_manager = SharedAlbum(service)
         """
         self._service = service["service"]
 
@@ -36,6 +53,10 @@ class SharedAlbum:
         ----------
         val: bool
             value to be set (default is False)
+
+        Examples
+        --------
+        >>> sharing_manager.show_only_created(False)
         """
         self._SHOW_ONLY_CREATED = val
 
@@ -53,6 +74,10 @@ class SharedAlbum:
         -------
         json object:
             Album information
+        Examples
+        --------
+        >>> sharing_manager.get(token)
+        {'id': '...', 'title': 'test shared album', 'productUrl': 'https://photos.google.com/lr/album/...', 'isWriteable': True, 'shareInfo': {'sharedAlbumOptions': {'isCommentable': True}, 'shareableUrl': 'https://photos.app.goo.gl/...', 'shareToken': '...', 'isJoined': True, 'isOwned': True}}
         """
         return self._service.sharedAlbums().get(shareToken=token).execute()
 
@@ -69,6 +94,10 @@ class SharedAlbum:
         -------
         json object:
             Joined album information
+
+        Examples
+        --------
+        >>> sharing_manager.join(token)
         """
         request_body = {
             "shareToken": token
@@ -83,6 +112,10 @@ class SharedAlbum:
         ----------
         token: str
             Share token of the joined shared album to leave
+
+        Examples
+        --------
+        >>> sharing_manager.leave(token)
         """
         request_body = {
             "shareToken": token
@@ -120,6 +153,15 @@ class SharedAlbum:
         the pagination can be set by album.set_pagination(n)
         with 1 < n < 50, since at least 1 album must be sought
         and 50 is the API maximum.  20 is API default.
+
+        Examples
+        --------
+        Get iterator
+        >>> album_iterator = sharing_manager.list()
+
+        Print first item
+        >>> print(next(album_iterator))
+        {'id': '...', 'title': 'Test sharing album', 'productUrl': 'https://photos.google.com/lr/album/...', 'mediaItemsCount': '0', 'coverPhotoBaseUrl': 'https://lh3.googleusercontent.com/lr/...', 'coverPhotoMediaItemId': '...'}
         """
         page_token = ""
         while page_token is not None:
