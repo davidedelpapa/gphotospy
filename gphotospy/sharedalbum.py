@@ -1,7 +1,9 @@
 class SharedAlbum:
-
-    PAGESIZE = 50
-    SHOW_ONLY_CREATED = False
+    """
+    Shared album manager
+    """
+    _PAGESIZE = 50
+    _SHOW_ONLY_CREATED = False
 
     def __init__(self, service):
         """
@@ -24,7 +26,7 @@ class SharedAlbum:
             n = 50
         if n < 1:
             n = 1
-        self.PAGESIZE = n
+        self._PAGESIZE = n
 
     def show_only_created(self, val: bool):
         """
@@ -35,7 +37,7 @@ class SharedAlbum:
         val: bool
             value to be set (default is False)
         """
-        self.SHOW_ONLY_CREATED = val
+        self._SHOW_ONLY_CREATED = val
 
     # API ENDPOINTS
     def get(self, token: str):
@@ -87,7 +89,7 @@ class SharedAlbum:
         }
         return self._service.sharedAlbums().leave(body=request_body).execute()
 
-    def list(self, show_only_created=SHOW_ONLY_CREATED):
+    def list(self, show_only_created=_SHOW_ONLY_CREATED):
         """
         Iterator over the albums present in the Sharing tab
 
@@ -97,8 +99,8 @@ class SharedAlbum:
             Set if it has to list only albums created via the API
             (default is set by show_only_created(), whose default is FALSE)
 
-        Returns
-        -------
+        yields
+        ------
         iterator:
             iteratore over the list of albums
 
@@ -122,7 +124,7 @@ class SharedAlbum:
         page_token = ""
         while page_token is not None:
             result = self._service.sharedAlbums().list(
-                pageSize=self.PAGESIZE,
+                pageSize=self._PAGESIZE,
                 excludeNonAppCreatedData=show_only_created,
                 pageToken=page_token
             ).execute()

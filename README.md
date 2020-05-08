@@ -4,26 +4,42 @@ Interact with Gooogle Photos in Python
 
 ## Usage
 
-This library is still a work.in.progress, not yet fully functional.
+This library is experimental.
 
-However experimental, most of the API is covered, and it could be used for personal expriments at least.
+However, most of the API is covered, and it could be used for personal expriments at least.
 
-There will soon be examples of usage.
+Example working with albums; see the below "Set up authorization" for a quick review on how to get Google's API keys and authorization (save it in a `gphoto_oauth.json` file)
+
+```python
+from gphotospy import authorize
+from gphotospy.album import Album
+
+# Select secrets file
+CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+# Get authorization and return a service object
+service = authorize.init(CLIENT_SECRET_FILE)
+
+# Init the album manager
+album_manager = Album(service)
+
+# Create a new album
+new_album = album_manager.create('test album')
+
+# Get the album id and share it
+id_album = new_album.get("id")
+album_manager.share(id_album)
+```
+
+Check the _examples_ folder for more examples of use.
 
 ## API Coverage
 
 - [x] OAuth authorization
 - [ ] Google server upload
-
   - [x] Simple uploader
   - [ ] Resumable uploader
-
-- [ ] Objects representations
-
-  - [ ] Media
-  - [ ] Album
-
-- [ ] Albums
+- [x] Albums
   - [x] addEnrichment
   - [x] batchAddMediaItems
   - [x] batchRemoveMediaItems
@@ -46,9 +62,31 @@ There will soon be examples of usage.
 
 ## Test Coverage
 
-Not yet implemented. Error handling is also almost non existent.
+Not yet implemented. The tests have been done "live" on my account. I'm planning to set up mock tests for this suite, just for regression purposes.
+
+## Documentation
+
+- [x] Docstrings (all in place, but it can be improved)
+- [-] Examples (some are missing)
+- [ ] Tutorials (coming up soon)
+- [x] API docs (must be improved though)
+
+## Near future plans
+
+These are the next steps:
+
+- [ ] Finish Documentation
+- [ ] Mock tests
+- [ ] Objects representations
+  - [ ] Media
+  - [ ] Album
+  - ...
+
+Accepting ideas, so don't be shy and put them forth!
 
 ## Set up authorization
+
+Quick guide:
 
 Go to [Google Cloud Console](https://console.cloud.google.com).
 Set up a new project, then on the menu select: `Api & Services` > `Library`.
@@ -58,3 +96,21 @@ After this, coming back to the main interface, select in the row of the OAuth 2.
 
 Once run the authentication it should open a browser to authenticate.
 If you are creating a project for non commercial use you need not apply for review, but you have to allow it, because Google show a big message of warining. Clicking on advanced, it shows the button to allow the authorization, even though the app is not reviewed by Google (useful for tests and personal use projects). A .token file will keep the authorization for further use
+
+## Contributing
+
+Please give me some heads up if you are working on an interesting feature to add to _gphotospy_ before a PR (well, even afterwards it's ok).
+
+1. Fork it (<https://github.com/davidedelpapa/gphotospy/fork>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
+## License
+
+MIT, see the _LICENSE_ file.
+
+## About me
+
+Too shy to talk about it (not true). THis project though has been a relief during COVID lockdown.

@@ -4,6 +4,8 @@ from .upload import upload
 
 
 class Val:
+    """ Internal use only """
+
     def __init__(self, v, t: str):
         self.val = v
         self.type = t
@@ -36,6 +38,17 @@ def date(year=0, month=0, day=0):
     Returns
     -------
     Date object
+
+    Examples
+    --------
+    Import
+    >>> from gphotospy.media import date
+
+    Set Christmas and search for Christmas media
+    >>> Xmas = date(0, 12, 25)
+    >>> search_iterator = media_manager.search(filter=[Xmas])
+    >>> next(search_iterator)
+    {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'image/jpeg', 'mediaMetadata': {'creationTime': '...', 'width': '899', 'height': '1599', 'photo': {}}, 'filename': '...jpg'}
     """
     return Val({
         "year": year,
@@ -58,6 +71,18 @@ def date_range(start_date, end_date):
     Returns
     -------
     dateRange object
+    Examples
+    --------
+    Import
+    >>> from gphotospy.media import date, date_range
+
+    Set Christmas and search for Christmas media
+    >>> Xmas = date(0, 12, 25)
+    >>> new_year_eve = date(0, 12, 31)
+    >>> my_range = date_range(Xmas, new_year_eve)
+    >>> search_iterator = media_manager.search(filter=[my_range])
+    >>> next(search_iterator)
+    {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'image/jpeg', 'mediaMetadata': {'creationTime': '...', 'width': '899', 'height': '1599', 'photo': {}}, 'filename': '...jpg'}
     """
     return Val({
         "startDate": start_date.val,
@@ -69,37 +94,72 @@ class CONTENTFILTER:
     """
     Filters to search media by categories
 
-    Available Filters
-    -----------------
+    Attributes
+    ----------
+    NONE:
+        Default content category.
+    LANDSCAPES:
+        Media contains landscape
+    RECEIPTS:
+        Media contains receipts
+    CITYSCAPES:
+        Media contains cityscapes
+    LANDMARKS:
+        Media contains landmarks
+    SELFIES:
+        Media contains selfies
+    PEOPLE:
+        Media contains people
+    PETS:
+        Media contains pets
+    WEDDINGS:
+        Media contains wedding scenes
+    BIRTHDAYS:
+        Media contains birthday scenes
+    DOCUMENTS:
+        Media contains documents
+    TRAVEL:
+        Media contains media taken during
+    ANIMALS:
+        Media contains animals
+    FOOD:
+        Media contains food
+    SPORT:
+        Media contains sporting events
+    NIGHT:
+        Media taken at night
+    PERFORMANCES:
+        Media from performances
+    WHITEBOARDS:
+        Media contains whiteboards
+    SCREENSHOTS:
+        Media item is a screenshot
+    UTILITY:
+        Media that are considered utilities, such as documents, whiteboards, receipts, ...
+    ARTS:
+        Media contains art
+    CRAFTS:
+        Media contains crafts
+    FASHION:
+        Media is fashion related
+    HOUSES:
+        Media contains houses
+    GARDENS:
+        Media contains gardens
+    FLOWERS:
+        Media contains flowers
+    HOLIDAYS:
+        Media taken on holidays
 
-    - NONE          Default content category.
-    - LANDSCAPES    Media contains landscape
-    - RECEIPTS      Media contains receipts
-    - CITYSCAPES    Media contains cityscapes
-    - LANDMARKS     Media contains landmarks
-    - SELFIES       Media contains selfies
-    - PEOPLE        Media contains people
-    - PETS          Media contains pets
-    - WEDDINGS      Media contains wedding scenes
-    - BIRTHDAYS     Media contains birthday scenes
-    - DOCUMENTS     Media contains documents
-    - TRAVEL        Media contains media taken during
-    - ANIMALS       Media contains animals
-    - FOOD          Media contains food
-    - SPORT         Media contains sporting events
-    - NIGHT         Media taken at night
-    - PERFORMANCES  Media from performances
-    - WHITEBOARDS   Media contains whiteboards
-    - SCREENSHOTS   Media item is a screenshot
-    - UTILITY       Media that are considered utilities, such as documents,
-                    whiteboards, receipts, ...
-    - ARTS          Media contains art
-    - CRAFTS        Media contains crafts
-    - FASHION       Media is fashion related
-    - HOUSES        Media contains houses
-    - GARDENS       Media contains gardens
-    - FLOWERS       Media contains flowers
-    - HOLIDAYS      Media taken on holidays
+    Examples
+    --------
+    Import
+    >>> from gphotospy.media import CONTENTFILTER
+
+    Search media by setting content
+    >>> search_iterator = media_manager.search(filter=[CONTENTFILTER.TRAVEL])
+    >>> next(search_iterator)
+    {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'image/jpeg', 'mediaMetadata': {'creationTime': '...', 'width': '899', 'height': '1599', 'photo': {}}, 'filename': '...jpg'}
     """
     NONE = Val('NONE', 'CONTENTFILTER')
     LANDSCAPES = Val('LANDSCAPES', 'CONTENTFILTER')
@@ -134,12 +194,24 @@ class MEDIAFILTER:
     """
     Filters to search media by type
 
-    Available Filters
-    -----------------
+    Attributes
+    ----------
+    ALL_MEDIA:
+        All media types included
+    VIDEO:
+        Media is a video
+    PHOTO:
+        Media is a photo
 
-    - ALL_MEDIA     All media types included
-    - VIDEO         Media is a video
-    - PHOTO         Media is a photo
+    Examples
+    --------
+    Import
+    >>> from gphotospy.media import MEDIAFILTER
+
+    Search media by setting content
+    >>> search_iterator = media_manager.search(filter=[MEDIAFILTER.VIDEO])
+    >>> next(search_iterator)
+    {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'video/mp4', 'mediaMetadata': {'creationTime': '2020-05-07T15:05:13Z', 'width': '480', 'height': '848', 'video': {'fps': 30.000768068818967, 'status': 'READY'}}, 'filename': '...mp4'}
     """
     ALL_MEDIA = Val('ALL_MEDIA', 'MEDIAFILTER')
     VIDEO = Val('VIDEO', 'MEDIAFILTER')
@@ -150,22 +222,35 @@ class FEATUREFILTER:
     """
     Filters to search media by feature
 
-    Available Filters
-    -----------------
+    Attributes
+    ----------
+    NONE:
+        No filter applied
+    FAVORITES:
+        Media marked as favorites
 
-    - NONE          No filter applied
-    - FAVORITES     Media marked as favorites
+    Examples
+    --------
+    Import
+    >>> from gphotospy.media import FEATUREFILTER
+
+    Search media by setting content
+    >>> search_iterator = media_manager.search(filter=[FEATUREFILTER.FAVORITES])
+    >>> next(search_iterator)
     """
     NONE = Val('NONE', 'FEATUREFILTER')
     FAVORITES = Val('FAVORITES', 'FEATUREFILTER')
 
 
 class Media:
-    LIST_PAGESIZE = 100
-    SEARCH_PAGESIZE = 100
+    """
+    Media manager
+    """
+    _LIST_PAGESIZE = 100
+    _SEARCH_PAGESIZE = 100
 
-    SHOW_ONLY_CREATED = False
-    INCLUDE_ARCHIVED = False
+    _SHOW_ONLY_CREATED = False
+    _INCLUDE_ARCHIVED = False
 
     def __init__(self, service):
         """
@@ -175,6 +260,23 @@ class Media:
         ----------
         service: service
             Service created with authorize.init()
+
+        Examples
+        --------
+        Example init of the media manager:
+
+        Imports
+        >>> from gphotospy import authorize
+        >>> from gphotospy.media import Media
+
+         Select Secrets file
+        >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+        Get authorization and return a service object
+        >>> service = authorize.init(CLIENT_SECRET_FILE)
+
+        Init the media manager
+        >>> media_manager = Media(service)
         """
         self._service = service["service"]
         self._secrets = service["secrets"]
@@ -190,7 +292,7 @@ class Media:
             n = 100
         if n < 1:
             n = 1
-        self.LIST_PAGESIZE = n
+        self._LIST_PAGESIZE = n
 
     def set_search_pagination(self, n: int):
         """ Undocumented: see search() """
@@ -201,7 +303,7 @@ class Media:
             n = 100
         if n < 1:
             n = 1
-        self.SEARCH_PAGESIZE = n
+        self._SEARCH_PAGESIZE = n
 
     def show_only_created(self, val: bool):
         """
@@ -211,8 +313,12 @@ class Media:
         ----------
         val: bool
             value to be set (default is False)
+
+        Examples
+        --------
+        >>> media_manager.show_only_created(False)
         """
-        self.SHOW_ONLY_CREATED = val
+        self._SHOW_ONLY_CREATED = val
 
     def show_archived(self, val: bool):
         """
@@ -222,8 +328,12 @@ class Media:
         ----------
         val: bool
             value to be set (default is False)
+
+        Examples
+        --------
+        >>> media_manager.show_archived(False)
         """
-        self.INCLUDE_ARCHIVED = val
+        self._INCLUDE_ARCHIVED = val
 
     def get_upload_object(self, upload_token, file_name="", description=""):
         """
@@ -311,6 +421,11 @@ class Media:
         album_position: POSITION, optional
             Position in the album where to put the media.
             See the relative class in album.POSITION
+
+        Returns
+        -------
+        Media item result (some media creatin may fail, the list has
+        the results for each attempted item creation)
         """
         if album_position is None:
             album_position = set_position()
@@ -356,6 +471,18 @@ class Media:
         -------
         json object:
             Media inforamtion
+
+        Examples
+        --------
+        Get an iterator:
+        >>> media_iterator = media_manager.list()
+
+        Get next media's id
+        >>> media_id = next(media_iterator).get("id")
+
+        Get media's info based on id
+        >>> media_manager.get(media_id)
+        {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'image/jpeg', 'mediaMetadata': {'creationTime': '...', 'width': '899', 'height': '1599', 'photo': {}}, 'filename': '...jpg'}
         """
         return self._service.mediaItems().get(mediaItemId=id).execute()
 
@@ -363,10 +490,9 @@ class Media:
         """
         Iterator over the meda present in the Google Photos account
 
-        Returns
+        Yields
         -------
-        iterator:
-            iteratore over the list of media
+        Iterator over the list of media
 
         Notes
         -----
@@ -384,11 +510,19 @@ class Media:
         the pagination can be set by album.set_list_pagination(n)
         with 1 < n < 100, since at least 1 album must be sought
         and 100 is the API maximum.  25 is API default.
+
+        Examples
+        --------
+        Get iterator
+        >>> media_iterator = media_manager.list()
+
+        Print first item
+        >>> print(next(media_iterator))
         """
         page_token = ""
         while page_token is not None:
             result = self._service.mediaItems().list(
-                pageSize=self.LIST_PAGESIZE,
+                pageSize=self._LIST_PAGESIZE,
                 pageToken=page_token
             ).execute()
             page_token = result.get("nextPageToken", None)
@@ -408,8 +542,12 @@ class Media:
         exclude: array
             filtrs to be excluded
 
-        Filters
-        -------
+        Yields
+        ------
+        Iterator over the list of media
+
+        Notes
+        -----
         There are 4 categories of filters, each with its own class.
         More info on the relative class.
         - Date Filter:
@@ -417,13 +555,6 @@ class Media:
         - Media Type Filter:    class MEDIAFILTER
         - Feature Fileter:      class FEATUREFILTER
 
-        Returns
-        -------
-        iterator:
-            iteratore over the list of media
-
-        Notes
-        -----
         Google Photo API search request returns in reality an object containing
         a paginated list of media.
 
@@ -442,8 +573,8 @@ class Media:
 
         # dicts
         search_filter = {
-            "includeArchivedMedia": self.INCLUDE_ARCHIVED,
-            "excludeNonAppCreatedData": self.SHOW_ONLY_CREATED
+            "includeArchivedMedia": self._INCLUDE_ARCHIVED,
+            "excludeNonAppCreatedData": self._SHOW_ONLY_CREATED
         }
 
         filter_date = {}
@@ -510,7 +641,7 @@ class Media:
 
         page_token = ""
         request_body = {
-            "pageSize": self.SEARCH_PAGESIZE,
+            "pageSize": self._SEARCH_PAGESIZE,
             "pageToken": page_token,
             "filters": search_filter
         }
@@ -532,15 +663,26 @@ class Media:
         album_id: str
             Id of the album containing the media sought
 
-        Returns
-        -------
-        iterator:
-            iteratore over the list of media present in the album
+        Yields
+        ------
+        Iterator over the list of media present in the album
+
+        Examples
+        --------
+        Get an album id
+        >>> from gphotospy.album import Album
+        >>> album_manager = Album(service)
+        >>> album_iterator = album_manager.list()
+        >>> album_id = next(album_iterator).get("id")
+
+        Search in album
+        >>> search_iterator = media_manager.search_album(album_id)
+        >>> next(search_iterator)
         """
         page_token = ""
         request_body = {
             "albumId": album_id,
-            "pageSize": self.SEARCH_PAGESIZE,
+            "pageSize": self._SEARCH_PAGESIZE,
             "pageToken": page_token
         }
 

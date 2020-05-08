@@ -1,6 +1,23 @@
 
 class POSITION:
-    """ Defines positions for enrichments inside an album """
+    """
+    Defines positions for enrichments inside an album.
+
+    Used in the function set_position()
+
+    Attributes
+    ----------
+    UNSPECIFIED:
+        Position is unspecified. Default in API if not specified.
+    FIRST:
+        First position in the album
+    LAST:
+        Last position in the album
+    AFTER_MEDIA:
+        After the specified media (specify media id)
+    AFTER_ENRICHMENT:
+        After the specified enrichment (specify enrichment id)
+    """
     UNSPECIFIED = 'POSITION_TYPE_UNSPECIFIED'
     FIRST = 'FIRST_IN_ALBUM'
     LAST = 'LAST_IN_ALBUM'
@@ -11,6 +28,7 @@ class POSITION:
 def set_position(position=POSITION.FIRST, id_item=None):
     """
     Contructs the position of Enrichment item inside the album
+
     Parameters
     ----------
     position: POSITION
@@ -24,7 +42,16 @@ def set_position(position=POSITION.FIRST, id_item=None):
                 specified by id_item
     Returns
     -------
-    item position
+    Item position
+
+    Examples
+    --------
+    Set absolute position:
+    >>> pos1 = set_position(POSITION.LAST)
+
+    Set relative position; enrichment_id contains the id
+    of the enrichment after which to position the element:
+    >>> pos2 = set_position(POSITION.AFTER_ENRICHMENT, enrichment_id)
     """
     pos = {}
     if position == POSITION.AFTER_MEDIA:
@@ -65,6 +92,10 @@ def geolocate(name: str, lat: float, lon: float):
     Returns
     -------
     A geographic point to use in Location or Map enrichments
+
+    Examples
+    --------
+    >>> rome = geolocate("Rome", 41.9028, 12.4964)
     """
     return {
         "locationName": name,
@@ -76,11 +107,13 @@ def geolocate(name: str, lat: float, lon: float):
 
 
 class Album:
-
-    PAGESIZE = 50
-    SHOW_ONLY_CREATED = False
-    COLLABORATIVE = False
-    COMMENTABLE = True
+    """
+    Album manager
+    """
+    _PAGESIZE = 50
+    _SHOW_ONLY_CREATED = False
+    _COLLABORATIVE = False
+    _COMMENTABLE = True
 
     def __init__(self, service):
         """
@@ -90,21 +123,41 @@ class Album:
         ----------
         service: service
             Service created with authorize.init()
+
+        Examples
+        --------
+        Example init of the album manager:
+
+        Imports
+        >>> from gphotospy import authorize
+        >>> from gphotospy.album import Album
+
+        Select Secrets file
+        >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+        Get authorization and return a service object
+        >>> service = authorize.init(CLIENT_SECRET_FILE)
+
+        Init the album manager
+        >>> album_manager = Album(service)
         """
+
         self._service = service["service"]
         self._secrets = service["secrets"]
 
     # UTILITIES
     def set_pagination(self, n: int):
-        """ Undocumented: see list() """
+        """ Undocumented: see list() for more info """
+
         # There's really no need to change this,
         #  since the "list" is an iterator that takes care of pagination
         #  behind the scenes
+
         if n > 50:
             n = 50
         if n < 1:
             n = 1
-        self.PAGESIZE = n
+        self._PAGESIZE = n
 
     def set_collaborative_share(self, val: bool):
         """
@@ -114,8 +167,13 @@ class Album:
         ----------
         val: bool
             value to be set (default is False)
+
+        Examples
+        --------
+        >>> album_manager.set_collaborative_share(False)
         """
-        self.COLLABORATIVE = val
+
+        self._COLLABORATIVE = val
 
     def set_commentable_share(self, val: bool):
         """
@@ -125,8 +183,13 @@ class Album:
         ----------
         val: bool
             value to be set (default is True)
+
+        Examples
+        --------
+        >>> album_manager.set_commentable_share(True)
         """
-        self.COMMENTABLE = val
+
+        self._COMMENTABLE = val
 
     def show_only_created(self, val: bool):
         """
@@ -136,8 +199,13 @@ class Album:
         ----------
         val: bool
             value to be set (default is False)
+
+        Examples
+        --------
+        >>> album_manager.show_only_created(False)
         """
-        self.SHOW_ONLY_CREATED = val
+
+        self._SHOW_ONLY_CREATED = val
 
     # API ENDPOINTS
     def add_enrichment(self, album_id: str, enrichement_type, position):
@@ -168,6 +236,19 @@ class Album:
         position: Position object
             Position object where to add the location.
             Contruct it with the set_position() function
+
+        Examples
+        --------
+        Imports:
+        >>> from gphotospy.album import set_position, geolocate, POSITION
+
+        Location and position inside the album
+        >>> Rome = geolocate("Rome", 41.9028, 12.4964)
+        >>> last_pos = set_position(POSITION.LAST)
+
+        Create enrichemnt
+        >>> album_manager.add_location(id_album, Rome, last_pos)
+        {'id': '...'}
         """
         if position is None:
             position = set_position()
@@ -199,6 +280,20 @@ class Album:
         position: Position object
             Position object where to add the location.
             Contruct it with the set_position() function
+
+        Examples
+        --------
+        Imports:
+        >>> from gphotospy.album import set_position, geolocate, POSITION
+
+        Add two locations and a position inside the album
+        >>> Rome = geolocate("Rome", 41.9028, 12.4964)
+        >>> Pescara = geolocate("Nice city", 42.5102, 14.1437)
+        >>> first_pos = set_position(POSITION.FIRST)
+
+        Create enrichemnt
+        >>> album_manager.add_map(id_album, Pescara, Rome, first_pos)
+        {'id': '...'}
         """
         if position is None:
             position = set_position()
@@ -228,6 +323,12 @@ class Album:
         position: Position object
             Position object where to add the text.
             Contruct it with the set_position() function
+
+        Examples
+        --------
+        Add text enrichment
+        >>> album_manager.add_text(id_album, 'Test Text Enrichment')
+        {'id': '...'}
         """
         if position is None:
             position = set_position()
@@ -302,6 +403,12 @@ class Album:
         -------
         json object:
             Album information
+
+        Examples
+        --------
+        Create new album
+        >>> album_manager.create('test album')
+        {'id': '...', 'title': 'test album', 'productUrl': 'https://photos.google.com/lr/album/...', 'isWriteable': True}
         """
         request_body = {
             "album": {'title': title}
@@ -321,10 +428,21 @@ class Album:
         -------
         json object:
             Album information
+
+        Examples
+        --------
+        Get an iterator:
+        >>> album_iterator = album_manager.list()
+
+        Get next album's id
+        >>> album_id = next(album_iterator).get("id")
+
+        Get album's info based on id
+        >>> album_manager.get(album_id)
         """
         return self._service.albums().get(albumId=id).execute()
 
-    def list(self, show_only_created=SHOW_ONLY_CREATED):
+    def list(self, show_only_created=_SHOW_ONLY_CREATED):
         """
         Iterator over the albums present in the Google Photos account
 
@@ -334,10 +452,9 @@ class Album:
             Set if it has to list only albums created via the API
             (default is set by show_only_created(), whose default is FALSE)
 
-        Returns
+        Yields
         -------
-        iterator:
-            iteratore over the list of albums
+        An iterator over the list of albums
 
         Notes
         -----
@@ -355,11 +472,19 @@ class Album:
         the pagination can be set by album.set_pagination(n)
         with 1 < n < 50, since at least 1 album must be sought
         and 50 is the API maximum.  20 is API default.
+
+        Examples
+        --------
+        Get an iterator:
+        >>> album_iterator = album_manager.list()
+
+        Print first item:
+        >>> print(next(album_iterator))
         """
         page_token = ""
         while page_token is not None:
             result = self._service.albums().list(
-                pageSize=self.PAGESIZE,
+                pageSize=self._PAGESIZE,
                 excludeNonAppCreatedData=show_only_created,
                 pageToken=page_token
             ).execute()
@@ -371,8 +496,8 @@ class Album:
     def share(
             self,
             id: str,
-            collaborative=COLLABORATIVE,
-            commentable=COMMENTABLE):
+            collaborative=_COLLABORATIVE,
+            commentable=_COMMENTABLE):
         """
         Shares the album with the given id and options
 
@@ -392,9 +517,23 @@ class Album:
         json object:
             ShareInfo object if all went well
 
-        Limitations
-        -----------
+        Notes
+        -----
         This action is allowed only on albums which were created via the API.
+
+        Examples
+        --------
+        Create new album and get its id:
+        >>> new_album = album_manager.create('test album')
+        >>> id_album = new_album.get("id")
+
+        Share the newly created album
+        >>> album_manager.share(id_album)
+        {'sharedAlbumOptions': {'isCommentable': True}, 'shareableUrl': 'https://photos.app.goo.gl/...', 'shareToken': '...', 'isJoined': True, 'isOwned': True}
+
+        Unshare the album
+        >>> album_manager.unshare(id_album)
+        {}
         """
         request_body = {
             "sharedAlbumOptions": {
@@ -421,8 +560,22 @@ class Album:
         json object:
             Empty if all went well
 
-        Limitations
-        -----------
+        Notes
+        -----
         This action is allowed only on albums which were created via the API.
+
+        Examples
+        --------
+        Create new album and get its id:
+        >>> new_album = album_manager.create('test album')
+        >>> id_album = new_album.get("id")
+
+        Share the newly created album
+        >>> album_manager.share(id_album)
+        {'sharedAlbumOptions': {'isCommentable': True}, 'shareableUrl': 'https://photos.app.goo.gl/...', 'shareToken': '...', 'isJoined': True, 'isOwned': True}
+
+        Unshare the album
+        >>> album_manager.unshare(id_album)
+        {}
         """
         return self._service.albums().unshare(albumId=id).execute()
