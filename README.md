@@ -2,19 +2,27 @@
 
 Interact with Gooogle Photos in Python
 
-## Usage
+## Installation
 
-This library is experimental.
+You can use Pypi distribution (recommended method):
 
-However, most of the API is covered, and it could be used for personal expriments at least.
+```bash
+pip install gphotospy
+```
 
-Example working with albums; see the below "Set up authorization" for a quick review on how to get Google's API keys and authorization (save it in a `gphoto_oauth.json` file)
+Otherwise clone this repo and use the modules in _gphotospy_ directly (not recommended).
+
+## Usage examples
+
+This library is unofficial; most of the API is covered, however no proper test coverage has been implemented so far.
+
+Please refer to [Google's authorization guide](https://developers.google.com/photos/library/guides/get-started#configure-app) (recommended), or see the below "Set up authorization" for a quick review on how to get Google's API keys and authorization (save it in a `gphoto_oauth.json` file).
 
 ```python
 from gphotospy import authorize
 from gphotospy.album import Album
 
-# Select secrets file
+# Select secrets file (got through Google's API console)
 CLIENT_SECRET_FILE = "gphoto_oauth.json"
 
 # Get authorization and return a service object
@@ -66,8 +74,8 @@ Not yet implemented. The tests have been done "live" on my account. I'm planning
 
 ## Documentation
 
-- [x] Docstrings (all in place, but it can be improved)
-- [-] Examples (some are missing)
+- [x] Docstrings
+- [x] Examples
 - [ ] Tutorials (coming up soon)
 - [x] API docs (must be improved though)
 
@@ -77,6 +85,7 @@ These are the next steps:
 
 - [ ] Finish Documentation
 - [ ] Mock tests
+- [ ] Resumable Uploads
 - [ ] Objects representations
   - [ ] Media
   - [ ] Album
@@ -86,7 +95,9 @@ Accepting ideas, so don't be shy and put them forth!
 
 ## Set up authorization
 
-Quick guide:
+Browse through [Google's authorization guide](https://developers.google.com/photos/library/guides/get-started#configure-app)
+
+Quick recap:
 
 Go to [Google Cloud Console](https://console.cloud.google.com).
 Set up a new project, then on the menu select: `Api & Services` > `Library`.
