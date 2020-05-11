@@ -381,6 +381,14 @@ class Media:
         Returns
         -------
         New media object if successfull, None if unsuccessfull.
+
+        Examples
+        --------
+        Stage media (raw upload)
+        >>> media_manager.stage_media(os.path.join(os.getcwd(), 'picture.jpg'))
+
+        Finalize all staged media
+        >>> media_manager.batchCreate()
         """
         upload_token = upload(self._secrets, media_file)
         if upload_token is None:
@@ -424,8 +432,30 @@ class Media:
 
         Returns
         -------
-        Media item result (some media creatin may fail, the list has
+        Media item result (some media creation may fail, the list has
         the results for each attempted item creation)
+
+        Examples
+        --------
+        Stage media (raw upload)
+        >>> media_manager.stage_media(os.path.join(os.getcwd(), 'picture.jpg'))
+
+        Finalize all staged media
+        >>> res = media_manager.batchCreate()
+
+        Advanced creation without stage_media:
+        >>> from gphotospy.upload import upload
+        >>> img_file = os.path.join(os.getcwd(), 'picture.jpg')
+
+        Uploading file
+        >>> upload_token = upload(service.get("secrets"), img_file)
+
+        Constructing the upload file list
+        >>> upload_items = []
+        >>> upload_items.append(media_manager.get_upload_object(upload_token, description="a new picture"))
+
+        Batch Create (we need an album's id)
+        >>> media_manager.batchCreate(album_id, media_items=upload_items)
         """
         if album_position is None:
             album_position = set_position()
