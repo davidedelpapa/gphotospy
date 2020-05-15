@@ -47,10 +47,12 @@ def set_position(position=POSITION.FIRST, id_item=None):
     Examples
     --------
     Set absolute position:
+
     >>> pos1 = set_position(POSITION.LAST)
 
     Set relative position; enrichment_id contains the id
     of the enrichment after which to position the element:
+
     >>> pos2 = set_position(POSITION.AFTER_ENRICHMENT, enrichment_id)
     """
     pos = {}
@@ -109,6 +111,27 @@ def geolocate(name: str, lat: float, lon: float):
 class Album:
     """
     Album manager
+
+    Examples
+    --------
+    Example init of the album manager:
+
+    Imports
+
+    >>> from gphotospy import authorize
+    >>> from gphotospy.album import Album
+
+    Select Secrets file
+
+    >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+    Get authorization and return a service object
+
+    >>> service = authorize.init(CLIENT_SECRET_FILE)
+
+    Init the album manager
+
+    >>> album_manager = Album(service)
     """
     _PAGESIZE = 50
     _SHOW_ONLY_CREATED = False
@@ -129,16 +152,20 @@ class Album:
         Example init of the album manager:
 
         Imports
+
         >>> from gphotospy import authorize
         >>> from gphotospy.album import Album
 
         Select Secrets file
+
         >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
 
         Get authorization and return a service object
+
         >>> service = authorize.init(CLIENT_SECRET_FILE)
 
         Init the album manager
+
         >>> album_manager = Album(service)
         """
 
@@ -240,13 +267,16 @@ class Album:
         Examples
         --------
         Imports:
+
         >>> from gphotospy.album import set_position, geolocate, POSITION
 
         Location and position inside the album
+
         >>> Rome = geolocate("Rome", 41.9028, 12.4964)
         >>> last_pos = set_position(POSITION.LAST)
 
         Create enrichemnt
+
         >>> album_manager.add_location(id_album, Rome, last_pos)
         {'id': '...'}
         """
@@ -284,14 +314,17 @@ class Album:
         Examples
         --------
         Imports:
+
         >>> from gphotospy.album import set_position, geolocate, POSITION
 
         Add two locations and a position inside the album
+
         >>> Rome = geolocate("Rome", 41.9028, 12.4964)
         >>> Pescara = geolocate("Nice city", 42.5102, 14.1437)
         >>> first_pos = set_position(POSITION.FIRST)
 
         Create enrichemnt
+
         >>> album_manager.add_map(id_album, Pescara, Rome, first_pos)
         {'id': '...'}
         """
@@ -327,6 +360,7 @@ class Album:
         Examples
         --------
         Add text enrichment
+
         >>> album_manager.add_text(id_album, 'Test Text Enrichment')
         {'id': '...'}
         """
@@ -407,6 +441,7 @@ class Album:
         Examples
         --------
         Create new album
+
         >>> album_manager.create('test album')
         {'id': '...', 'title': 'test album', 'productUrl': 'https://photos.google.com/lr/album/...', 'isWriteable': True}
         """
@@ -432,12 +467,15 @@ class Album:
         Examples
         --------
         Get an iterator:
+
         >>> album_iterator = album_manager.list()
 
         Get next album's id
+
         >>> album_id = next(album_iterator).get("id")
 
         Get album's info based on id
+
         >>> album_manager.get(album_id)
         """
         return self._service.albums().get(albumId=id).execute()
@@ -476,9 +514,11 @@ class Album:
         Examples
         --------
         Get an iterator:
+
         >>> album_iterator = album_manager.list()
 
         Print first item:
+
         >>> print(next(album_iterator))
         """
         page_token = ""
@@ -524,14 +564,17 @@ class Album:
         Examples
         --------
         Create new album and get its id:
+
         >>> new_album = album_manager.create('test album')
         >>> id_album = new_album.get("id")
 
         Share the newly created album
+
         >>> album_manager.share(id_album)
         {'sharedAlbumOptions': {'isCommentable': True}, 'shareableUrl': 'https://photos.app.goo.gl/...', 'shareToken': '...', 'isJoined': True, 'isOwned': True}
 
         Unshare the album
+
         >>> album_manager.unshare(id_album)
         {}
         """
@@ -567,14 +610,17 @@ class Album:
         Examples
         --------
         Create new album and get its id:
+
         >>> new_album = album_manager.create('test album')
         >>> id_album = new_album.get("id")
 
         Share the newly created album
+
         >>> album_manager.share(id_album)
         {'sharedAlbumOptions': {'isCommentable': True}, 'shareableUrl': 'https://photos.app.goo.gl/...', 'shareToken': '...', 'isJoined': True, 'isOwned': True}
 
         Unshare the album
+
         >>> album_manager.unshare(id_album)
         {}
         """

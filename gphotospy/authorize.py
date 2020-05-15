@@ -44,7 +44,11 @@ def init(secrets):
     ----------
     secrets: str
         JSON file containing the secrets for OAuth,
-        as created in the Google Cloud Consolle
+        as created in the Google Cloud Console
+
+    Returns
+    -------
+    A service object to pass to the Media, Album, or SharedAlbum contructors
     """
     credentials = get_credentials(secrets)
     service_object = {

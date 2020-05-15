@@ -42,9 +42,11 @@ def date(year=0, month=0, day=0):
     Examples
     --------
     Import
+
     >>> from gphotospy.media import date
 
     Set Christmas and search for Christmas media
+
     >>> Xmas = date(0, 12, 25)
     >>> search_iterator = media_manager.search(filter=[Xmas])
     >>> next(search_iterator)
@@ -74,9 +76,11 @@ def date_range(start_date, end_date):
     Examples
     --------
     Import
+
     >>> from gphotospy.media import date, date_range
 
     Set Christmas and search for Christmas media
+
     >>> Xmas = date(0, 12, 25)
     >>> new_year_eve = date(0, 12, 31)
     >>> my_range = date_range(Xmas, new_year_eve)
@@ -154,9 +158,11 @@ class CONTENTFILTER:
     Examples
     --------
     Import
+
     >>> from gphotospy.media import CONTENTFILTER
 
     Search media by setting content
+
     >>> search_iterator = media_manager.search(filter=[CONTENTFILTER.TRAVEL])
     >>> next(search_iterator)
     {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'image/jpeg', 'mediaMetadata': {'creationTime': '...', 'width': '899', 'height': '1599', 'photo': {}}, 'filename': '...jpg'}
@@ -206,9 +212,11 @@ class MEDIAFILTER:
     Examples
     --------
     Import
+
     >>> from gphotospy.media import MEDIAFILTER
 
     Search media by setting content
+
     >>> search_iterator = media_manager.search(filter=[MEDIAFILTER.VIDEO])
     >>> next(search_iterator)
     {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'video/mp4', 'mediaMetadata': {'creationTime': '2020-05-07T15:05:13Z', 'width': '480', 'height': '848', 'video': {'fps': 30.000768068818967, 'status': 'READY'}}, 'filename': '...mp4'}
@@ -232,9 +240,11 @@ class FEATUREFILTER:
     Examples
     --------
     Import
+
     >>> from gphotospy.media import FEATUREFILTER
 
     Search media by setting content
+
     >>> search_iterator = media_manager.search(filter=[FEATUREFILTER.FAVORITES])
     >>> next(search_iterator)
     """
@@ -245,6 +255,27 @@ class FEATUREFILTER:
 class Media:
     """
     Media manager
+
+    Examples
+    --------
+    Example init of the media manager:
+
+    Imports
+
+    >>> from gphotospy import authorize
+    >>> from gphotospy.media import Media
+
+    Select Secrets file
+
+    >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+    Get authorization and return a service object
+
+    >>> service = authorize.init(CLIENT_SECRET_FILE)
+
+    Init the media manager
+
+    >>> media_manager = Media(service)
     """
     _LIST_PAGESIZE = 100
     _SEARCH_PAGESIZE = 100
@@ -266,16 +297,20 @@ class Media:
         Example init of the media manager:
 
         Imports
+
         >>> from gphotospy import authorize
         >>> from gphotospy.media import Media
 
-         Select Secrets file
+        Select Secrets file
+
         >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
 
         Get authorization and return a service object
+
         >>> service = authorize.init(CLIENT_SECRET_FILE)
 
         Init the media manager
+
         >>> media_manager = Media(service)
         """
         self._service = service["service"]
@@ -385,9 +420,11 @@ class Media:
         Examples
         --------
         Stage media (raw upload)
+
         >>> media_manager.stage_media(os.path.join(os.getcwd(), 'picture.jpg'))
 
         Finalize all staged media
+
         >>> media_manager.batchCreate()
         """
         upload_token = upload(self._secrets, media_file)
@@ -438,23 +475,29 @@ class Media:
         Examples
         --------
         Stage media (raw upload)
+
         >>> media_manager.stage_media(os.path.join(os.getcwd(), 'picture.jpg'))
 
         Finalize all staged media
+
         >>> res = media_manager.batchCreate()
 
         Advanced creation without stage_media:
+
         >>> from gphotospy.upload import upload
         >>> img_file = os.path.join(os.getcwd(), 'picture.jpg')
 
         Uploading file
+
         >>> upload_token = upload(service.get("secrets"), img_file)
 
         Constructing the upload file list
+
         >>> upload_items = []
         >>> upload_items.append(media_manager.get_upload_object(upload_token, description="a new picture"))
 
         Batch Create (we need an album's id)
+
         >>> media_manager.batchCreate(album_id, media_items=upload_items)
         """
         if album_position is None:
@@ -505,12 +548,15 @@ class Media:
         Examples
         --------
         Get an iterator:
+
         >>> media_iterator = media_manager.list()
 
         Get next media's id
+
         >>> media_id = next(media_iterator).get("id")
 
         Get media's info based on id
+
         >>> media_manager.get(media_id)
         {'id': '...', 'productUrl': 'https://photos.google.com/lr/photo/...', 'baseUrl': 'https://lh3.googleusercontent.com/lr/...', 'mimeType': 'image/jpeg', 'mediaMetadata': {'creationTime': '...', 'width': '899', 'height': '1599', 'photo': {}}, 'filename': '...jpg'}
         """
@@ -544,9 +590,11 @@ class Media:
         Examples
         --------
         Get iterator
+
         >>> media_iterator = media_manager.list()
 
         Print first item
+
         >>> print(next(media_iterator))
         """
         page_token = ""
@@ -700,12 +748,14 @@ class Media:
         Examples
         --------
         Get an album id
+
         >>> from gphotospy.album import Album
         >>> album_manager = Album(service)
         >>> album_iterator = album_manager.list()
         >>> album_id = next(album_iterator).get("id")
 
         Search in album
+
         >>> search_iterator = media_manager.search_album(album_id)
         >>> next(search_iterator)
         """

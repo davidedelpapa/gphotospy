@@ -1,6 +1,27 @@
 class SharedAlbum:
     """
     Shared album manager
+
+    Examples
+    --------
+    Example init of the media manager:
+
+    Imports
+
+    >>> from gphotospy import authorize
+    >>> from gphotospy.sharedalbum import SharedAlbum
+
+    Select Secrets file
+
+    >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
+
+    Get authorization and return a service object
+
+    >>> service = authorize.init(CLIENT_SECRET_FILE)
+
+    Init the media manager
+
+    >>> sharing_manager = SharedAlbum(service)
     """
     _PAGESIZE = 50
     _SHOW_ONLY_CREATED = False
@@ -19,16 +40,20 @@ class SharedAlbum:
         Example init of the media manager:
 
         Imports
+
         >>> from gphotospy import authorize
         >>> from gphotospy.sharedalbum import SharedAlbum
 
-         Select Secrets file
+        Select Secrets file
+
         >>> CLIENT_SECRET_FILE = "gphoto_oauth.json"
 
         Get authorization and return a service object
+
         >>> service = authorize.init(CLIENT_SECRET_FILE)
 
         Init the media manager
+
         >>> sharing_manager = SharedAlbum(service)
         """
         self._service = service["service"]
@@ -157,9 +182,11 @@ class SharedAlbum:
         Examples
         --------
         Get iterator
+
         >>> album_iterator = sharing_manager.list()
 
         Print first item
+
         >>> print(next(album_iterator))
         {'id': '...', 'title': 'Test sharing album', 'productUrl': 'https://photos.google.com/lr/album/...', 'mediaItemsCount': '0', 'coverPhotoBaseUrl': 'https://lh3.googleusercontent.com/lr/...', 'coverPhotoMediaItemId': '...'}
         """
