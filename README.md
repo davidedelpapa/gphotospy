@@ -1,6 +1,8 @@
 # gPhotoSpy
 
-Interact with Gooogle Photos in Python
+Interact with Google Photos in Python
+
+[![PyPI version](https://badge.fury.io/py/gphotospy.svg)](https://badge.fury.io/py/gphotospy) [![Documentation Status](https://readthedocs.org/projects/gphotospy/badge/?version=latest)](https://gphotospy.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
 
