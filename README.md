@@ -41,7 +41,13 @@ id_album = new_album.get("id")
 album_manager.share(id_album)
 ```
 
+### Examples
+
 Check the _examples_ folder for more examples of use.
+
+### Tutorials
+
+Check the [wiki](https://github.com/davidedelpapa/gphotospy/wiki) for tutorials
 
 ## API Coverage
 
