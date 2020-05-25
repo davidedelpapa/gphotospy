@@ -725,6 +725,7 @@ class Media:
         }
 
         while page_token is not None:
+            request_body["pageToken"] = page_token
             result = self._service.mediaItems().search(
                 body=request_body).execute()
             page_token = result.get("nextPageToken", None)
@@ -767,6 +768,7 @@ class Media:
         }
 
         while page_token is not None:
+            request_body["pageToken"] = page_token
             result = self._service.mediaItems().search(
                 body=request_body).execute()
             page_token = result.get("nextPageToken", None)
