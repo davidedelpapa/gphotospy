@@ -597,15 +597,12 @@ class Media:
 
         >>> print(next(media_iterator))
         """
-
         page_token = ""
-
-        result = self._service.mediaItems().list(
-            pageSize=self._LIST_PAGESIZE,
-            pageToken=page_token
-        ).execute()
-
         while page_token is not None:
+            result = self._service.mediaItems().list(
+                pageSize=self._LIST_PAGESIZE,
+                pageToken=page_token
+            ).execute()
             page_token = result.get("nextPageToken", None)
             curr_list = result.get("mediaItems")
             for media in curr_list:
@@ -727,10 +724,9 @@ class Media:
             "filters": search_filter
         }
 
-        result = self._service.mediaItems().search(
-            body=request_body).execute()
-
         while page_token is not None:
+            result = self._service.mediaItems().search(
+                body=request_body).execute()
             page_token = result.get("nextPageToken", None)
             curr_list = result.get("mediaItems")
             for media in curr_list:
@@ -770,10 +766,9 @@ class Media:
             "pageToken": page_token
         }
 
-        result = self._service.mediaItems().search(
-            body=request_body).execute()
-
         while page_token is not None:
+            result = self._service.mediaItems().search(
+                body=request_body).execute()
             page_token = result.get("nextPageToken", None)
             curr_list = result.get("mediaItems")
             for media in curr_list:
