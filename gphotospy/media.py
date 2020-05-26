@@ -1,4 +1,6 @@
-import os
+import os.path
+import json
+from urllib.request import urlopen
 from .album import set_position, POSITION
 from .upload import upload
 
@@ -12,6 +14,171 @@ class Val:
 
     def isinstance(self, t: str):
         return t == self.type
+
+
+class MediaItem(Val):
+    """ Maps a MediaItem """
+
+    def __init__(self, media_object):
+        """ MediaItem Constructor """
+        super().__init__(media_object, 'MEDIAITEM')
+
+    def __str__(self):
+        """ Used for print() """
+        return(json.dumps(self.val, indent=4))
+
+    def dimensions(self, max_width=0, max_height=0):
+        """
+        Gets media dimensions
+
+        Parameters
+        ----------
+        max_width: int
+            If specified sets a maximum allowed width
+        max_height: int
+            If specified sets a maximum allowed height
+
+        Returns
+        -------
+        (int, int):
+            (Width, Height) tuple
+
+        Examples
+        --------
+        >>> media.get_media_dimesions(media_id)
+        (720, 200)
+        """
+        metadata = self.val.get("mediaMetadata")
+        width = int(metadata.get("width"))
+        height = int(metadata.get("height"))
+        if max_width != 0:
+            if width > max_width:
+                width = max_width
+        if max_height != 0:
+            if height > max_height:
+                height = max_height
+        return (width, height)
+
+    def filename(self):
+        """ Gets media filename """
+        return self.val.get("filename", "")
+
+    def metadata(self):
+        """ Gets the MediaItem's metadata (JSON object mapped to a dict) """
+        return self.val.get("mediaMetadata", {})
+
+    def is_photo(self):
+        """ Returns True if the media item is a photo """
+        metadata = self.val.get("mediaMetadata")
+        if "photo" in metadata:
+            return True
+        return False
+
+    def is_video(self):
+        """ Returns True if the media item is a video """
+        metadata = self.val.get("mediaMetadata")
+        if "video" in metadata:
+            return True
+        return False
+
+    def get_url(self,
+                for_download=True,
+                max_width=0,
+                max_height=0,
+                crop=False):
+        """
+        Gets the media's URL.
+
+        This method tries to recognize if the media is a video or a photo,
+        and gets the URL accordingly.
+
+        Parameters
+        ----------
+        for_download: bool
+            Specify if the url is for download purposes.
+            If False and the media is a video, it retrieves the thumbnail (default True)
+        max_width: int
+            If specified, sets the picture's or video thumbnail's maximum width
+        max_height: int
+            If specified, sets the picture's or video thumbnail's maximum height
+        crop: bool
+            If True, crops the image at the exact dimensions set by (default False)
+        Returns
+        -------
+        Url: str
+
+        Raise
+        -----
+        UnknownMediaType
+            If it cannot guess which type is the media
+
+        Examples
+        --------
+        >>> media.get_url()
+        """
+        base_url = self.val.get("baseUrl")
+        metadata = self.val.get("mediaMetadata")
+        if for_download:
+            if "photo" in metadata:
+                return "{}=d".format(base_url)
+            elif "video" in metadata:
+                return "{}=dv".format(base_url)
+            else:
+                raise UnknownMediaType
+        # if max_width and max_height set to 0, gets them from media info
+        if max_width == 0:
+            max_width = metadata.get("width", 0)
+        if max_height == 0:
+            max_height = metadata.get("height", 0)
+        url = "{}=w{}-h{}".format(base_url, max_width, max_height)
+        if crop:
+            url = "{}-c".format(url)
+        return url
+
+    def raw_download(self):
+        """
+        Downloads the raw media.
+
+        This method tries to recognize if the media is a video or a photo,
+        and downloads it accordingly.
+
+        Returns
+        -------
+        File object data.
+            Internally it applies a `read()` to the `rullib.urlopen`
+            on the media address
+
+        Raise
+        -----
+        UnknownMediaType
+            If it cannot guess which type is the media
+
+        Examples
+        --------
+        >>> media_iterator = media_manager.list()
+        >>> media = MediaItem(next(media_iterator))
+
+        Once we have the media item we can download the media as a file
+
+        >>> with open(media.filename(), 'wb') as output:
+        >>> ...    output.write(media.raw_download())
+        """
+        return urlopen(self.get_url()).read()
+
+
+class MediaError(Exception):
+    """Base class for exceptions in this module."""
+
+    def __init__(self, msg=""):
+        self.msg = msg
+
+    def __str__(self):
+        return(repr(self.msg))
+
+
+class UnknownMediaType(MediaError):
+    """Exception raised when donloading media has an unknown type"""
+    pass
 
 
 def date(year=0, month=0, day=0):
@@ -616,9 +783,9 @@ class Media:
         Parameters
         ----------
         fileter: array
-            filtrs to be included
+            filters to be included
         exclude: array
-            filtrs to be excluded
+            filters to be excluded
 
         Yields
         ------
@@ -648,7 +815,8 @@ class Media:
         with 1 < n < 100, since at least 1 album must be sought
         and 100 is the API maximum.  25 is API default.
         """
-
+        if not isinstance(filter, list):
+            filter = [filter]
         # dicts
         search_filter = {
             "includeArchivedMedia": self._INCLUDE_ARCHIVED,
@@ -684,6 +852,8 @@ class Media:
                 feature_filters.append(f.val)
         # Add exclude
         if exclude is not None:
+            if not isinstance(exclude, list):
+                exclude = [exclude]
             for e in exclude:
                 if e.isinstance('CONTENTFILTER'):
                     content_excludes.append(e.val)
