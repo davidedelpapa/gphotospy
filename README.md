@@ -84,7 +84,7 @@ Not yet implemented. The tests have been done "live" on my account. I'm planning
 
 - [x] Docstrings
 - [x] Examples
-- [ ] Tutorials (coming up soon)
+- [-] Tutorials (See the wiki)
 - [x] API docs (must be improved though)
 
 ## Near future plans
@@ -95,7 +95,7 @@ These are the next steps:
 - [ ] Mock tests
 - [ ] Resumable Uploads
 - [ ] Objects representations
-  - [ ] Media
+  - [x] Media
   - [ ] Album
   - ...
 
@@ -130,6 +130,12 @@ Please give me some heads up if you are working on an interesting feature to add
 
 MIT, see the _LICENSE_ file.
 
+## Changelog
+
+- V. 0.1.2: Added media item object representation
+- V. 0.1.1: Added documentation
+- V. 0.1.0: Fisrt usable version
+
 ## About me
 
-Too shy to talk about it (not true). THis project though has been a relief during COVID lockdown.
+Too shy to talk about it (not true). This project though has been a relief during COVID lockdown.
