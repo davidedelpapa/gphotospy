@@ -4,6 +4,7 @@ gphoto_oauth.json
 app.py
 run
 img/
+*.txt
 
 # vscode
 .vscode/
