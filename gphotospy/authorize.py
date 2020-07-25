@@ -18,9 +18,11 @@ scopes_arr = [
 
 def get_credentials(secrets):
     credentials = None
+    secrets_dir = os.path.dirname(os.path.abspath(secrets))
+    token_path = os.path.join(secrets_dir, token_file)
 
-    if os.path.exists(token_file):
-        with open(token_file, 'rb') as token:
+    if os.path.exists(token_path):
+        with open(token_path, 'rb') as token:
             credentials = pickle.load(token)
 
     if not credentials or not credentials.valid:
@@ -31,7 +33,7 @@ def get_credentials(secrets):
                 secrets, scopes_arr)
             credentials = app_flow.run_local_server()
 
-        with open(token_file, 'wb') as token:
+        with open(token_path, 'wb') as token:
             pickle.dump(credentials, token)
     return credentials
 
