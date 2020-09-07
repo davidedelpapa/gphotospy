@@ -1,6 +1,10 @@
+import itertools
 import os.path
 import json
 from urllib.request import urlopen
+
+from gphotospy.utils import batches
+
 from .album import set_position, POSITION
 from .upload import upload
 
@@ -675,28 +679,37 @@ class Media:
             else:
                 return None
         if album_id is None:
-            from .album import Album
-            from datetime import datetime
-            curr_datetime = datetime.now()
-            date_str = curr_datetime.strftime("%c")
-            service_object = {
-                "secrets": self._secrets,
-                "service": self._service
-            }
-            _album = Album(service_object)
-            _resp = _album.create(date_str)
-            album_id = _resp.get("id")
+            album_id = self._create_empty_album()
+
         request_body = {
             "album_id": album_id,
-            "newMediaItems": media_items,
             "albumPosition": album_position
         }
         if album_id is None:
             request_body["albumId"] = album_id
-        result = self._service.mediaItems().batchCreate(
-            body=request_body).execute()
+
+        results = []
+        for batch in batches(media_items, 50):
+            request_body["newMediaItems"] = batch
+            result = self._service.mediaItems().batchCreate(body=request_body).execute()
+            results.append(result)
+
         self._staged_media.clear()
-        return result.get("newMediaItemResults")
+        return list(itertools.chain.from_iterable(result.get("newMediaItemResults") for result in results))
+
+    def _create_empty_album(self):
+        from .album import Album
+        from datetime import datetime
+        curr_datetime = datetime.now()
+        date_str = curr_datetime.strftime("%c")
+        service_object = {
+            "secrets": self._secrets,
+            "service": self._service
+        }
+        _album = Album(service_object)
+        _resp = _album.create(date_str)
+        album_id = _resp.get("id")
+        return album_id
 
     def get(self, id: str):
         """
