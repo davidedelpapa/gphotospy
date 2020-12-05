@@ -58,7 +58,7 @@ def init(secrets):
     }
     try:
         service = build(service_name, version, credentials=credentials)
-        logging.info(service_name, 'service created successfully')
+        logging.debug('service created successfully: {}'.format(service_name))
         service_object["service"] = service
         return service_object
     except Exception as e:
