@@ -1,5 +1,5 @@
 nose2
-google-api-python-client 
-google-auth-httplib2 
-google-auth-oauthlib
-oauth2client
+google-api-python-client>=2.1.0
+google-auth-httplib2>=0.1.0
+google-auth-oauthlib>=0.4.4
+oauth2client>=4.1.3

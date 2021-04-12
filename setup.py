@@ -10,8 +10,8 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="gphotospy",
-    version="0.1.2",
-    description="Unofficial Google Photos Python library ",
+    version="0.2.0",
+    description="Unofficial Google Photos Python library",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/davidedelpapa/gphotospy",
@@ -26,9 +26,9 @@ setup(
     packages=["gphotospy"],
     include_package_data=True,
     install_requires=[
-        "google-api-python-client",
-        "google-auth-httplib2",
-        "google-auth-oauthlib",
-        "oauth2client"
+        "google-api-python-client>=2.1.0",
+        "google-auth-httplib2>=0.1.0",
+        "google-auth-oauthlib>=0.4.4",
+        "oauth2client>=4.1.3"
     ],
 )

@@ -57,7 +57,7 @@ def init(secrets):
         "secrets": secrets
     }
     try:
-        service = build(service_name, version, credentials=credentials)
+        service = build(service_name, version,  static_discovery=False, credentials=credentials)
         logging.debug('service created successfully: {}'.format(service_name))
         service_object["service"] = service
         return service_object

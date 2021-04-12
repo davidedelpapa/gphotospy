@@ -4,6 +4,10 @@ Interact with Google Photos in Python
 
 [![PyPI version](https://badge.fury.io/py/gphotospy.svg)](https://badge.fury.io/py/gphotospy) [![Documentation Status](https://readthedocs.org/projects/gphotospy/badge/?version=latest)](https://gphotospy.readthedocs.io/en/latest/?badge=latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**NOTE:** Updated to Google API 2.0.0; please update this package to the new version.
+
+Sorry for breaking some compatibility here, but Google has had some small changes under the hood, which require this update (See [Issue#12](https://github.com/davidedelpapa/gphotospy/issues/12)).
+
 ## Installation
 
 You can use Pypi distribution (recommended method):
@@ -25,7 +29,7 @@ from gphotospy import authorize
 from gphotospy.album import Album
 
 # Select secrets file (got through Google's API console)
-CLIENT_SECRET_FILE = "gphoto_oauth.json"
+CLIENT_SECRET_FILE = "gphoto_oauth.json" # Here your secret's file. See below.
 
 # Get authorization and return a service object
 service = authorize.init(CLIENT_SECRET_FILE)
