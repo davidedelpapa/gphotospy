@@ -955,6 +955,6 @@ class Media:
             result = self._service.mediaItems().search(
                 body=request_body).execute()
             page_token = result.get("nextPageToken", None)
-            curr_list = result.get("mediaItems")
+            curr_list = result.get("mediaItems", [])
             for media in curr_list:
                 yield media
