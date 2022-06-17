@@ -16,8 +16,10 @@ def upload(secrets, media_file):
     secrets: str
         JSON file containing the secrets for OAuth,
         as created in the Google Cloud Consolle
-    media_file: Path
+    media_file: Path, file-like object, or requests iterator
         Path to the file to upload
+        File-like object opened in binary mode to upload
+        Python requests iterator for chunked encoded requests
 
     Returns
     -------
@@ -32,8 +34,15 @@ def upload(secrets, media_file):
     }
 
     header['X-Goog-Upload-Content-Type'] = mimetypes.guess_type(media_file)[0]
-
-    f = open(media_file, 'rb').read()
+    is_file_like = False
+    try: # maintain potential python2 compat
+        is_file_like = not isinstance(fp, str)
+    except:
+        pass
+    
+    f = media_file
+    if not is_file_like:
+        f = open(media_file, 'rb')
 
     response = requests.post(upload_url, data=f, headers=header)
     if response.ok:
