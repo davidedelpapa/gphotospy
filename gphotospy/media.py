@@ -569,7 +569,7 @@ class Media:
             }
         }
 
-    def stage_media(self, media_file, description=""):
+    def stage_media(self, media_file, description="", mime_type=None):
         """
         Stage media to be added to the photo account,
         by uploading to Google server.
@@ -598,7 +598,7 @@ class Media:
 
         >>> media_manager.batchCreate()
         """
-        upload_token = upload(self._secrets, media_file)
+        upload_token = upload(self._secrets, media_file, mime_type=mime_type)
         if upload_token is None:
             return None
         new_media = self.get_upload_object(
