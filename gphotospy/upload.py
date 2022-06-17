@@ -7,7 +7,7 @@ upload_url = 'https://photoslibrary.googleapis.com/v1/uploads'
 mimetypes.init()
 
 
-def upload(secrets, media_file):
+def upload(secrets, media_file, mime_type=None):
     """
     Uploads files of media to Google Server, to put in Photos
 
@@ -33,7 +33,9 @@ def upload(secrets, media_file):
         'X-Goog-Upload-Protocol': 'raw'
     }
 
-    header['X-Goog-Upload-Content-Type'] = mimetypes.guess_type(media_file)[0]
+    if mime_type is None:
+        mime_type =  mimetypes.guess_type(media_file)[0]
+    header['X-Goog-Upload-Content-Type'] = mime_type
     is_file_like = False
     try: # maintain potential python2 compat
         is_file_like = not isinstance(fp, str)
