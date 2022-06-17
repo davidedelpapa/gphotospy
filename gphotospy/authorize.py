@@ -9,17 +9,17 @@ from google.auth.transport.requests import Request
 
 service_name = "photoslibrary"
 version = "v1"
-token_file = f'{service_name}_{version}.token'
+default_token_file = f'{service_name}_{version}.token'
 scopes_arr = [
     'https://www.googleapis.com/auth/photoslibrary',
     'https://www.googleapis.com/auth/photoslibrary.sharing'
 ]
 
 
-def get_credentials(secrets):
+def get_credentials(secrets, token_file=None):
     credentials = None
     secrets_dir = os.path.dirname(os.path.abspath(secrets))
-    token_path = os.path.join(secrets_dir, token_file)
+    token_path = os.path.join(secrets_dir, token_file or default_token_file)
 
     if os.path.exists(token_path):
         with open(token_path, 'rb') as token:
@@ -38,7 +38,7 @@ def get_credentials(secrets):
     return credentials
 
 
-def init(secrets):
+def init(secrets, token_file=None):
     """
     Initializes the service, requesting the authorization from the browser.
 
@@ -52,7 +52,7 @@ def init(secrets):
     -------
     A service object to pass to the Media, Album, or SharedAlbum contructors
     """
-    credentials = get_credentials(secrets)
+    credentials = get_credentials(secrets, token_file=token_file)
     service_object = {
         "secrets": secrets
     }
