@@ -38,7 +38,7 @@ def upload(secrets, media_file, mime_type=None):
     header['X-Goog-Upload-Content-Type'] = mime_type
     is_file_like = False
     try: # maintain potential python2 compat
-        is_file_like = not isinstance(fp, str)
+        is_file_like = not isinstance(media_file, str)
     except:
         pass
     
