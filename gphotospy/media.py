@@ -788,6 +788,23 @@ class Media:
             for media in curr_list:
                 yield media
 
+    def _get_all_media_items(self, extra_request_body: dict):
+        page_token = ""
+        request_body = {
+            **extra_request_body,
+            "pageSize": self._SEARCH_PAGESIZE,
+            "pageToken": page_token
+        }
+
+        while page_token is not None:
+            request_body["pageToken"] = page_token
+            result = self._service.mediaItems().search(
+                body=request_body).execute()
+            page_token = result.get("nextPageToken", None)
+            curr_list = result.get("mediaItems")
+            for media in curr_list:
+                yield media
+
     def search(self, filter, exclude=None):
         """
         Iterator over a filtered search of all the media
@@ -900,21 +917,7 @@ class Media:
 
         # print(search_filter)
 
-        page_token = ""
-        request_body = {
-            "pageSize": self._SEARCH_PAGESIZE,
-            "pageToken": page_token,
-            "filters": search_filter
-        }
-
-        while page_token is not None:
-            request_body["pageToken"] = page_token
-            result = self._service.mediaItems().search(
-                body=request_body).execute()
-            page_token = result.get("nextPageToken", None)
-            curr_list = result.get("mediaItems")
-            for media in curr_list:
-                yield media
+        return self._get_all_media_items({ "filters": search_filter })
 
     def search_album(self, album_id: str):
         """
@@ -943,18 +946,4 @@ class Media:
         >>> search_iterator = media_manager.search_album(album_id)
         >>> next(search_iterator)
         """
-        page_token = ""
-        request_body = {
-            "albumId": album_id,
-            "pageSize": self._SEARCH_PAGESIZE,
-            "pageToken": page_token
-        }
-
-        while page_token is not None:
-            request_body["pageToken"] = page_token
-            result = self._service.mediaItems().search(
-                body=request_body).execute()
-            page_token = result.get("nextPageToken", None)
-            curr_list = result.get("mediaItems")
-            for media in curr_list:
-                yield media
+        return self._get_all_media_items({ "albumId": album_id })
