@@ -16,7 +16,7 @@ scopes_arr = [
 ]
 
 
-def get_credentials(secrets):
+def get_credentials(secrets, open_browser=True):
     credentials = None
     secrets_dir = os.path.dirname(os.path.abspath(secrets))
     token_path = os.path.join(secrets_dir, token_file)
@@ -31,14 +31,14 @@ def get_credentials(secrets):
         else:
             app_flow = InstalledAppFlow.from_client_secrets_file(
                 secrets, scopes_arr)
-            credentials = app_flow.run_local_server()
+            credentials = app_flow.run_local_server(open_browser=open_browser)
 
         with open(token_path, 'wb') as token:
             pickle.dump(credentials, token)
     return credentials
 
 
-def init(secrets):
+def init(secrets, open_browser=True):
     """
     Initializes the service, requesting the authorization from the browser.
 
@@ -52,7 +52,7 @@ def init(secrets):
     -------
     A service object to pass to the Media, Album, or SharedAlbum contructors
     """
-    credentials = get_credentials(secrets)
+    credentials = get_credentials(secrets, open_browser)
     service_object = {
         "secrets": secrets
     }
